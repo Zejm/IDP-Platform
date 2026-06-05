@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/Zejm/IDP-Platform/internal/service"
 )
 
 func handleCommand(input string) {
@@ -17,11 +19,16 @@ func handleCommand(input string) {
 	command := parts[0]
 	args := parts[1:]
 
+	//mt.Println("command:", command)
+	fmt.Println("hey")
+
 	switch command {
 	case "help":
-		fmt.Println("")
+		fmt.Println("Available commands: help, hello, echo, exit")
 	case "echo":
 		fmt.Println(strings.Join(args, " "))
+	case "hello":
+		service.SayHello()
 	default:
 		fmt.Println("Unknown command. Try 'help' for assistance")
 	}
