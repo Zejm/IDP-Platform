@@ -1,22 +1,30 @@
 package service
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 )
 
-func SayHello() {
-	response, err := http.Get("http://localhost:8080/hello")
+type AddUserRequest struct {
+	Name string `json:"name"`
+}
+
+func AddUser(name string) string {
+	data, _ := json.Marshal(AddUserRequest{
+		Name: name,
+	})
+	
+	response, err := http.Post("http://localhost:8080/add-user", "application/json", bytes.NewBuffer(data))
 
 	if err != nil {
-		fmt.Println("error:", err)
-		return
+		return fmt.Sprintf("Error saving user: %s", err)
+	}
+	if response.StatusCode != http.StatusOK {
+		return "Error saving user: request canceled"
 	}
 
 	defer response.Body.Close()
-
-	body, _ := io.ReadAll(response.Body)
-
-	fmt.Println("response from server:", string(body))
+	return fmt.Sprintf("User '%s' successfully added", name)
 }
